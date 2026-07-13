@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
             background: #08080e;
@@ -19,36 +20,65 @@
             position: fixed;
             inset: 0;
             background: url('bg.avif') center/cover no-repeat;
-            opacity: 0.15;
+            opacity: 0.12;
             pointer-events: none;
             z-index: 0;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-1 { width: 600px; height: 600px; top: -200px; left: -200px; background: #6c5ce7; opacity: .08; }
+        .glow-2 { width: 400px; height: 400px; bottom: -100px; right: -100px; background: #00cec9; opacity: .06; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
         nav {
-            padding: 20px 0;
+            padding: 24px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .logo {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 900;
             background: linear-gradient(135deg, #6c5ce7, #00cec9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -.5px;
         }
-        .nav-links { display: flex; gap: 24px; align-items: center; }
-        .nav-links a { color: #999; text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color .2s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #6c5ce7;
+            transition: width .2s;
+        }
         .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
 
         .btn {
             display: inline-block;
-            padding: 12px 28px;
-            border-radius: 10px;
+            padding: 14px 32px;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
             border: none;
             text-decoration: none;
@@ -57,160 +87,187 @@
         .btn-primary {
             background: linear-gradient(135deg, #6c5ce7, #a363d9);
             color: #fff;
+            box-shadow: 0 4px 20px rgba(108,92,231,.3);
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(108,92,231,.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(108,92,231,.5);
         }
         .btn-outline {
             background: transparent;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,.12);
+            color: #ccc;
+            border: 1px solid rgba(255,255,255,.1);
         }
-        .btn-outline:hover { border-color: #6c5ce7; background: rgba(108,92,231,.1); }
-        .btn-discord { background: #5865F2; color: #fff; }
-        .btn-discord:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(88,101,242,.4); }
+        .btn-outline:hover { border-color: #6c5ce7; color: #fff; background: rgba(108,92,231,.08); }
 
         .hero {
-            padding: 100px 0 60px;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 40px 0;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 100px;
+            background: rgba(108,92,231,.12);
+            border: 1px solid rgba(108,92,231,.2);
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
         }
         .hero h1 {
-            font-size: clamp(44px, 8vw, 80px);
+            font-size: clamp(48px, 10vw, 90px);
             font-weight: 900;
             line-height: 1.05;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #fff 30%, #6c5ce7, #00cec9);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 25%, #6c5ce7 50%, #00cec9 75%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .hero p {
             font-size: 17px;
             color: #777;
-            max-width: 520px;
-            margin: 0 auto 32px;
+            max-width: 500px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
         }
         .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-        .section { padding: 80px 0; }
+        .section { padding: 100px 0; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .section-tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 100px;
+            background: rgba(108,92,231,.1);
+            border: 1px solid rgba(108,92,231,.15);
+            color: #a78bfa;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
         .section-title {
             font-size: 32px;
             font-weight: 800;
             color: #fff;
-            text-align: center;
             margin-bottom: 8px;
         }
         .section-sub {
             color: #777;
-            text-align: center;
             font-size: 15px;
-            margin-bottom: 48px;
+            max-width: 440px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
+            gap: 20px;
         }
         .feature-card {
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.06);
-            border-radius: 14px;
-            padding: 24px;
-            transition: all .3s;
-        }
-        .feature-card:hover {
-            background: rgba(255,255,255,.06);
-            border-color: rgba(108,92,231,.3);
-            transform: translateY(-3px);
-        }
-        .feature-card h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-        .feature-card p { font-size: 13px; color: #888; }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            max-width: 620px;
-            margin: 0 auto;
-        }
-        .pricing-card {
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 20px;
-            padding: 40px 32px;
-            text-align: center;
-            transition: all .3s;
-            position: relative;
-        }
-        .pricing-card.featured {
-            border-color: #6c5ce7;
-            background: rgba(108,92,231,.08);
-        }
-        .pricing-card.featured::before {
-            content: 'POPULAR';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #6c5ce7, #a363d9);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            padding: 4px 16px;
-            border-radius: 100px;
-        }
-        .pricing-card:hover { transform: translateY(-6px); }
-        .pricing-name { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-        .pricing-price {
-            font-size: 48px;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .pricing-price span { font-size: 20px; color: #888; }
-        .pricing-desc { color: #888; font-size: 14px; margin-bottom: 24px; }
-        .pricing-features { list-style: none; margin-bottom: 32px; }
-        .pricing-features li {
-            padding: 8px 0;
-            font-size: 14px;
-            color: #bbb;
-            border-bottom: 1px solid rgba(255,255,255,.04);
-        }
-        .pricing-features li:last-child { border: none; }
-
-        .order-section {
             background: rgba(255,255,255,.02);
             border: 1px solid rgba(255,255,255,.06);
-            border-radius: 20px;
-            padding: 60px 40px;
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
+            border-radius: 16px;
+            padding: 28px;
+            transition: all .35s;
+            position: relative;
+            overflow: hidden;
         }
-        .order-section h3 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .order-section p { color: #888; font-size: 15px; margin-bottom: 28px; }
-        .order-section .btn { padding: 14px 40px; font-size: 16px; }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle at 30% 30%, rgba(108,92,231,.04), transparent 60%);
+            opacity: 0;
+            transition: opacity .4s;
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:hover {
+            background: rgba(255,255,255,.04);
+            border-color: rgba(108,92,231,.25);
+            transform: translateY(-4px);
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .feature-card h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; position: relative; }
+        .feature-card p { font-size: 13px; color: #888; line-height: 1.5; position: relative; }
+
+        .download-section {
+            text-align: center;
+            padding: 100px 0 120px;
+        }
+        .download-section h2 {
+            font-size: 36px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .download-section p {
+            color: #888;
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+        .download-section .btn {
+            padding: 18px 56px;
+            font-size: 17px;
+            border-radius: 14px;
+            letter-spacing: .3px;
+        }
+        .download-hint {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .download-hint span {
+            color: #666;
+            font-size: 13px;
+        }
+        .download-hint span::before {
+            content: '▸ ';
+            color: #6c5ce7;
+        }
 
         footer {
             text-align: center;
             padding: 32px 0;
             border-top: 1px solid rgba(255,255,255,.04);
-            color: #555;
+            color: #444;
             font-size: 13px;
         }
 
         @media (max-width: 600px) {
-            .hero { padding: 60px 0 40px; }
-            .section { padding: 50px 0; }
+            .hero { min-height: 70vh; padding: 30px 0; }
+            .section { padding: 60px 0; }
             .features-grid { grid-template-columns: 1fr; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .order-section { padding: 40px 20px; }
+            .nav-links { gap: 20px; }
+            .download-section h2 { font-size: 28px; }
         }
     </style>
 </head>
 <body>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
 
     <div class="container">
         <nav>
@@ -223,25 +280,42 @@
         </nav>
 
         <section class="hero">
+            <div class="hero-badge">Free for Minecraft 1.16.5</div>
             <h1>Soloton</h1>
-            <p>Premium utility client for Minecraft 1.16.5 Forge. Combat, movement, visuals — all in one.</p>
+            <p>Premium utility client for Minecraft 1.16.5 Forge. Combat, movement, visuals — all modules included.</p>
             <div class="hero-buttons">
-                <a href="https://discord.gg/soloton" target="_blank" class="btn btn-primary" style="padding: 14px 36px; font-size: 16px;">Download</a>
-                <a href="#features" class="btn btn-outline" style="padding: 14px 36px; font-size: 16px;">Features</a>
+                <a href="https://discord.gg/soloton" target="_blank" class="btn btn-primary">Download</a>
+                <a href="#features" class="btn btn-outline">View Features</a>
             </div>
         </section>
 
         <section class="section" id="features">
-            <h2 class="section-title">Features</h2>
-            <p class="section-sub">Everything you need for an unfair advantage</p>
-            <div class="features-grid">
-                <div class="feature-card"><h3>⚔️ Combat</h3><p>KillAura, Aura, Velocity, Criticals, SuperBow, AutoTotem, AntiBot, TargetStrafe, AutoClicker</p></div>
-                <div class="feature-card"><h3>🏃 Movement</h3><p>Flight, Speed, LongJump, HighJump, Step, Strafe, Glide, NoSlow, Sprint, TargetStrafe</p></div>
-                <div class="feature-card"><h3>👁️ Visuals</h3><p>ESP, Tracers, Chams, FullBright, HitBox, ItemESP, NameTags, NoFov, XRay, BlockESP</p></div>
-                <div class="feature-card"><h3>🛡️ Player</h3><p>AntiVoid, NoFall, InvManager, ChestSteal, AutoArmor, AutoTool, NoRotate, AutoSoup</p></div>
-                <div class="feature-card"><h3>🧱 World</h3><p>Scaffold, Nuker, SpeedMine, Fucker, SafeWalk, Tower, AirPlace, FastBreak, ChestESP</p></div>
-                <div class="feature-card"><h3>🔧 Extra</h3><p>Baritone AI, ViaVersion, IRC Chat, Discord RPC, StaffAlert, Cape, Proxy, Macros, Configs</p></div>
+            <div class="section-header">
+                <div class="section-tag">Modules</div>
+                <h2 class="section-title">Everything you need</h2>
+                <p class="section-sub">Combat, movement, visuals and more — all in one lightweight client.</p>
             </div>
+            <div class="features-grid">
+                <div class="feature-card"><span class="feature-icon">⚔️</span><h3>Combat</h3><p>KillAura, Aura, Velocity, Criticals, SuperBow, AutoTotem, AntiBot, TargetStrafe, AutoClicker</p></div>
+                <div class="feature-card"><span class="feature-icon">🏃</span><h3>Movement</h3><p>Flight, Speed, LongJump, HighJump, Step, Strafe, Glide, NoSlow, Sprint, TargetStrafe</p></div>
+                <div class="feature-card"><span class="feature-icon">👁️</span><h3>Visuals</h3><p>ESP, Tracers, Chams, FullBright, HitBox, ItemESP, NameTags, NoFov, XRay, BlockESP</p></div>
+                <div class="feature-card"><span class="feature-icon">🛡️</span><h3>Player</h3><p>AntiVoid, NoFall, InvManager, ChestSteal, AutoArmor, AutoTool, NoRotate, AutoSoup</p></div>
+                <div class="feature-card"><span class="feature-icon">🧱</span><h3>World</h3><p>Scaffold, Nuker, SpeedMine, Fucker, SafeWalk, Tower, AirPlace, FastBreak, ChestESP</p></div>
+                <div class="feature-card"><span class="feature-icon">🔧</span><h3>Extra</h3><p>Baritone AI, ViaVersion, IRC Chat, Discord RPC, StaffAlert, Cape, Proxy, Macros, Configs</p></div>
+            </div>
+        </section>
+
+        <section class="download-section" id="download">
+            <div class="section-tag" style="margin-bottom:12px;">Free Download</div>
+            <h2>Ready to play?</h2>
+            <p>No keys. No payments. Just download and play.</p>
+            <a href="https://discord.gg/soloton" target="_blank" class="btn btn-primary">Download on Discord</a>
+            <div class="download-hint">
+                <span>Download jar from Discord</span>
+                <span>Place in mods folder</span>
+                <span>Launch 1.16.5 Forge</span>
+            </div>
+        </section>
 
         <footer>
             <p>Soloton — not affiliated with Mojang Studios or Microsoft. Minecraft is a trademark of Mojang AB.</p>
